@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="complete/src/main/java"/>
-	<classpathentry kind="src" path="complete/src/test/java"/>
-	<classpathentry kind="lib" path="complete/gradle/wrapper/gradle-wrapper.jar"/>
-	<classpathentry kind="lib" path="initial/gradle/wrapper/gradle-wrapper.jar"/>
 	<classpathentry kind="src" output="target/classes" path="src/main/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
