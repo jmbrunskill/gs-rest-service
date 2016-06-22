@@ -39,10 +39,47 @@ public class Application extends SpringBootServletInitializer {
     @Bean
     public DataSource dataSource() throws PropertyVetoException {
 	DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+	
+
 	driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-	driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/test");
-	driverManagerDataSource.setUsername("test");
-	driverManagerDataSource.setPassword("test");
+	
+	//Attempt to get properties from system, if not use defaults
+    String dbName = System.getProperty("RDS_DB_NAME");
+    String userName = System.getProperty("RDS_USERNAME");
+    String password = System.getProperty("RDS_PASSWORD");
+    String hostname = System.getProperty("RDS_HOSTNAME");
+    String port = System.getProperty("RDS_PORT");
+	
+	
+	if(dbName == null){
+		dbName = "testdb";
+		System.err.println("No dbName in properties, using Default:" + dbName);
+	}
+	
+	if(userName == null){
+		userName = "test";
+		System.err.println("No username in properties, using Default:" + userName);
+	}
+
+	if(password == null){
+		password = "test";
+		System.err.println("No password in properties, using Default:" + password);
+	}
+	
+	if(hostname == null){
+		hostname = "localhost";
+		System.err.println("No hostname in properties, using Default:" + hostname);
+	}
+	
+	if(port == null){
+		port = "3306";
+		System.err.println("No port in properties, using Default:" + port);
+	}
+	
+	
+	driverManagerDataSource.setUrl("jdbc:mysql://" + hostname + ":" + port + "/"+ dbName);
+	driverManagerDataSource.setUsername(userName);
+	driverManagerDataSource.setPassword(password);
 
 	return driverManagerDataSource;
     }

@@ -42,8 +42,22 @@ public class UserController {
 
 	HttpSession session = request.getSession(true);
 	session.setAttribute("id", user.getId());
-	session.setAttribute("name", user.getName());
+	session.setAttribute("name", user.getUsername());
 	session.setMaxInactiveInterval(60 * 60);
+	
+    }
+    
+    
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public void signup(HttpServletRequest request, @RequestParam("username")String username, @RequestParam("password")String password) throws Exception {
+	User user = userDao.findByUsername(username);
+	
+	if (user != null) {
+	    throw new Exception("User already exists");
+	}
+	
+	userDao.createUser(username, password);
+
     }
     
     @RequestMapping("/greeting")
@@ -51,20 +65,22 @@ public class UserController {
 	
 	HttpSession session = request.getSession(false);
         
+    	//System.out.println("session " + session.getMaxInactiveInterval() + " time: " +  session.getCreationTime());
+    	
         if (session == null) {
             throw new Exception("You are not logged in.");
-	}
+	    }
 
         String name = (String) session.getAttribute("name");
         
         if (name == null) {
-            throw new Exception("You are not logged in.");
+            throw new Exception("Name not found.");
         }
         
         return String.format(template, name);
     }
     
-    @ResponseStatus(HttpStatus.BAD_REQUEST)  // 409
+    @ResponseStatus(HttpStatus.BAD_REQUEST)  // 500
     @ExceptionHandler(Exception.class)
     public String errorHandler(HttpServletRequest req, Exception exception) {
 	return exception.getMessage();
@@ -72,7 +88,7 @@ public class UserController {
     
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)  // 409
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public void dbErrorHandler() {
-	
+    public void dbErrorHandler(HttpServletRequest req, Exception exception) {
+
     }
 }
