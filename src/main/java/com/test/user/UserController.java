@@ -80,6 +80,12 @@ public class UserController {
         return String.format(template, name);
     }
     
+    @RequestMapping("/health")
+    public String health(HttpServletRequest request) throws Exception {
+	
+        return "Still Alive";
+    }
+    
     @ResponseStatus(HttpStatus.BAD_REQUEST)  // 500
     @ExceptionHandler(Exception.class)
     public String errorHandler(HttpServletRequest req, Exception exception) {
